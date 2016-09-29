@@ -2,27 +2,35 @@
 # Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 # Contributor: Pierre Schmitz <pierre@archlinux.de>
+# Contributor: Christoph Viebig <oss@christoph-viebig.de>
 
-pkgname=cmake
-pkgver=3.6.2
+pkgname=cmake-git
+pkgver=3.6.2.1252.g5d29506
 pkgrel=1
 pkgdesc='A cross-platform open-source make system'
 arch=('i686' 'x86_64')
 url="http://www.cmake.org/"
 license=('custom')
+conflicts=('cmake')
+provides=('cmake')
 depends=('curl' 'libarchive' 'shared-mime-info' 'jsoncpp')
-makedepends=('qt5-base' 'python-sphinx' 'emacs')
+makedepends=('qt5-base' 'python-sphinx' 'emacs' 'git')
 optdepends=('qt5-base: cmake-gui'
             'libxkbcommon-x11: cmake-gui')
-source=("http://www.cmake.org/files/v${pkgver%.*}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('139d7affdd4e8ab1edfc9f4322d69e43')
+source=('git+https://cmake.org/cmake.git')
+md5sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/cmake"
+    git describe --always --tags | sed -e 's|^v||' -e 's|-|.|g'
+}
 
 prepare() {
-  cd ${pkgname}-${pkgver}
+    cd "$srcdir/cmake"
 }
 
 build() {
-  cd ${pkgname}-${pkgver}
+  cd "$srcdir/cmake"
 
   ./bootstrap --prefix=/usr \
     --mandir=/share/man \
@@ -35,22 +43,22 @@ build() {
 }
 
 package() {
-  cd ${pkgname}-${pkgver}
+  cd "$srcdir/cmake"
   make DESTDIR="${pkgdir}" install
 
   vimpath="${pkgdir}/usr/share/vim/vimfiles"
   install -d "${vimpath}"/{help,indent,syntax}
-  ln -s /usr/share/cmake-${pkgver%.*}/editors/vim/cmake-help.vim \
+  ln -s /usr/share/cmake-${pkgver%.*.*.*}/editors/vim/cmake-help.vim \
     "${vimpath}"/help/
-  ln -s /usr/share/cmake-${pkgver%.*}/editors/vim/cmake-indent.vim \
+  ln -s /usr/share/cmake-${pkgver%.*.*.*}/editors/vim/cmake-indent.vim \
     "${vimpath}"/indent/
-  ln -s /usr/share/cmake-${pkgver%.*}/editors/vim/cmake-syntax.vim \
+  ln -s /usr/share/cmake-${pkgver%.*.*.*}/editors/vim/cmake-syntax.vim \
     "${vimpath}"/syntax/
 
   install -d "${pkgdir}"/usr/share/emacs/site-lisp/
   emacs -batch -f batch-byte-compile \
-    "${pkgdir}"/usr/share/cmake-${pkgver%.*}/editors/emacs/cmake-mode.el
-  ln -s /usr/share/cmake-${pkgver%.*}/editors/emacs/cmake-mode.el \
+    "${pkgdir}"/usr/share/cmake-${pkgver%.*.*.*}/editors/emacs/cmake-mode.el
+  ln -s /usr/share/cmake-${pkgver%.*.*.*}/editors/emacs/cmake-mode.el \
     "${pkgdir}"/usr/share/emacs/site-lisp/
 
   install -Dm644 Copyright.txt \
