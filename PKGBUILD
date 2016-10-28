@@ -5,7 +5,7 @@
 # Contributor: Christoph Viebig <oss@christoph-viebig.de>
 
 pkgname=cmake-git
-pkgver=3.6.2.1252.g5d29506
+pkgver=3.7.0.rc2.374.gee0f2d2
 pkgrel=1
 pkgdesc='A cross-platform open-source make system'
 arch=('i686' 'x86_64')
@@ -48,17 +48,17 @@ package() {
 
   vimpath="${pkgdir}/usr/share/vim/vimfiles"
   install -d "${vimpath}"/{help,indent,syntax}
-  ln -s /usr/share/cmake-${pkgver%.*.*.*}/editors/vim/cmake-help.vim \
+  ln -s /usr/share/cmake-${pkgver%.*.*.*.*}/editors/vim/cmake-help.vim \
     "${vimpath}"/help/
-  ln -s /usr/share/cmake-${pkgver%.*.*.*}/editors/vim/cmake-indent.vim \
+  ln -s /usr/share/cmake-${pkgver%.*.*.*.*}/editors/vim/cmake-indent.vim \
     "${vimpath}"/indent/
-  ln -s /usr/share/cmake-${pkgver%.*.*.*}/editors/vim/cmake-syntax.vim \
+  ln -s /usr/share/cmake-${pkgver%.*.*.*.*}/editors/vim/cmake-syntax.vim \
     "${vimpath}"/syntax/
 
   install -d "${pkgdir}"/usr/share/emacs/site-lisp/
   emacs -batch -f batch-byte-compile \
-    "${pkgdir}"/usr/share/cmake-${pkgver%.*.*.*}/editors/emacs/cmake-mode.el
-  ln -s /usr/share/cmake-${pkgver%.*.*.*}/editors/emacs/cmake-mode.el \
+    "${pkgdir}"/usr/share/cmake-${pkgver%.*.*.*.*}/editors/emacs/cmake-mode.el
+  ln -s /usr/share/cmake-${pkgver%.*.*.*.*}/editors/emacs/cmake-mode.el \
     "${pkgdir}"/usr/share/emacs/site-lisp/
 
   install -Dm644 Copyright.txt \
